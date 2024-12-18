@@ -2,6 +2,8 @@ import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
 import { globalStyles } from '../../config/constants'
 import { UserData } from '../../types'
 import { Form } from './Form'
+import { Snackbar } from 'react-native-paper'
+import { useState } from 'react'
 
 type AuthProps = {
   isLogin?: boolean
@@ -14,6 +16,12 @@ export function Auth({
   onToggleLogin,
   onAuthenticate,
 }: Readonly<AuthProps>) {
+  const [visible, setVisible] = useState<boolean>(true)
+
+  function handleDismissSnackbar() {
+    setVisible(false)
+  }
+
   return (
     <ScrollView style={styles.screen}>
       <View style={styles.container}>
@@ -25,11 +33,25 @@ export function Auth({
           <Text style={styles.subtitle}>your wallet</Text>
         </View>
         <Form isLogin={isLogin} onSubmit={onAuthenticate} />
+        <Snackbar
+          visible={visible}
+          onDismiss={handleDismissSnackbar}
+          icon="check-bold"
+          onIconPress={() => {
+            console.log('icon pressed')
+          }}
+        >
+          Hey there, Iam a snackbar
+        </Snackbar>
         <View style={styles.messageContainer}>
           <Text style={styles.text}>
             {isLogin ? 'New to Cryptogen?' : 'Alredy have an account?'}{' '}
           </Text>
-          <Pressable onPress={onToggleLogin}>
+          <Pressable
+            /* onPress={onToggleLogin} */ onPress={() => {
+              setVisible(!visible)
+            }}
+          >
             <Text style={styles.textHighlited}>
               {isLogin ? 'Sign up' : 'Sign in'}
             </Text>
